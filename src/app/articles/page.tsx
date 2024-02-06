@@ -1,11 +1,16 @@
 import React from "react";
 import Article from "./article";
+import ArticleListContainer from "./articleListContainer";
 
 const ArticlesPage = () => {
   return (
-    <div>
+    <ArticleListContainer>
       <Article />
-    </div>
+      <Article />
+      <Article />
+      <Article />
+      <Article />
+    </ArticleListContainer>
   );
 };
 
