@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import PaginationMui from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
