@@ -6,21 +6,30 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 
 type PaginationProps = {
   count: number;
 };
 
 const Pagination = ({ count }: PaginationProps) => {
-  const router = useRouter();
   const allowedLimits = [10, 25, 50, 100];
+  const router = useRouter();
   const searchParams = useSearchParams();
+
+  const parsedPage = Number(searchParams.get("page")) || 1;
+  const parsedPageSize =
+    Number(searchParams.get("pageSize")) || allowedLimits[0];
+
+  const [page, setPage] = useState(parsedPage);
+  const [pageSize, setPageSize] = useState(parsedPageSize);
 
   const handlePageChange = (_: ChangeEvent<unknown>, page: number) => {
     const pageSize = !searchParams.get("pageSize")
       ? allowedLimits[0]
       : searchParams.get("pageSize");
+
+    setPage(page);
     router.push(`articles?page=${page}&pageSize=${pageSize}`);
   };
 
@@ -28,6 +37,7 @@ const Pagination = ({ count }: PaginationProps) => {
     const pageSize = Number(e.target.value) || allowedLimits[0];
     const page = searchParams.get("page");
 
+    setPageSize(pageSize);
     router.push(`articles?page=${page}&pageSize=${pageSize}`);
   };
 
@@ -35,8 +45,8 @@ const Pagination = ({ count }: PaginationProps) => {
     <>
       <PaginationContainer>
         <PaginationMui
-          count={count}
-          page={Number(searchParams.get("page")) || 1}
+          count={count / pageSize}
+          page={page || 1}
           onChange={handlePageChange}
         />
 
@@ -46,7 +56,7 @@ const Pagination = ({ count }: PaginationProps) => {
           </Typography>
           <Box>
             <Select
-              value={searchParams.get("pageSize") || allowedLimits[0]}
+              value={pageSize || allowedLimits[0]}
               onChange={handlePageSizeChange}
             >
               {allowedLimits.map((n) => (
