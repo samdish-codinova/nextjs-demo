@@ -35,13 +35,6 @@ const Pagination = ({ count }: PaginationProps) => {
   return (
     <>
       <PaginationContainer>
-        <Button
-          onClick={() => {
-            router.push("/articles?page=1&pageSize=10");
-          }}
-        >
-          Click Me
-        </Button>
         <PaginationMui
           count={count}
           page={Number(searchParams.get("page")) || 1}
