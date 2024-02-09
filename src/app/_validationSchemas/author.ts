@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const AuthorInputSchema = z.object({
-  name: z.string().trim(),
+  name: z.string().min(2).trim(),
   avatar: z.string().url(),
 });
 
