@@ -1,4 +1,4 @@
-import Pagination from "./Pagination";
+import Pagination from "../components/Pagination";
 import Article from "./article";
 import ArticleListContainer from "./articleListContainer";
 import { Response } from "./types";
@@ -31,15 +31,21 @@ type ArticlePageProps = {
 };
 
 const ArticlesPage = async ({ searchParams }: ArticlePageProps) => {
-  const offset = Number(searchParams.page) || 1;
-  const limit = Number(searchParams.pageSize) || 10;
+  const paramsPage = Number(searchParams.page);
+  const paramsPageSize = Number(searchParams.pageSize);
+  const defaultPage = 1;
+  const defaultPageSize = 10;
+
+  const offset = !paramsPage || paramsPage <= 0 ? defaultPage : paramsPage;
+  const limit =
+    !paramsPageSize || paramsPageSize <= 0 ? defaultPageSize : paramsPageSize;
 
   const response: Response = await fetch("http://localhost:5000/graphql", {
     method: "POST",
     body: JSON.stringify({
       query,
       variables: {
-        offset,
+        offset: offset - 1,
         limit,
       },
     }),
@@ -47,6 +53,8 @@ const ArticlesPage = async ({ searchParams }: ArticlePageProps) => {
       "Content-Type": "application/json",
     },
   }).then((res) => res.json());
+
+  if (!response.data?.articleList) throw new Error("Something went wrong");
 
   return (
     <>

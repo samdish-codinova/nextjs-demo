@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import Link from "next/link";
 import { Author, Meta } from "../articles/types";
 import AuthorCard from "./AuthorCard";
+import Pagination from "../components/Pagination";
 
 const query = `
   query GetAuthorList($limit: Int, $offset: Int) {
@@ -41,21 +42,21 @@ type AuthorListResponse = {
 const AuthorsPage = async ({ searchParams }: AuthorsPageProps) => {
   const paramsPage = Number(searchParams.page);
   const paramsPageSize = Number(searchParams.pageSize);
-  const defaultPage = 0;
+  const defaultPage = 1;
   const defaultPageSize = 10;
 
-  const offset = !paramsPage ? defaultPage : paramsPage;
+  const offset = !paramsPage || paramsPage <= 0 ? defaultPage : paramsPage;
   const limit =
-    !paramsPageSize || paramsPageSize < 0 ? defaultPageSize : paramsPageSize;
+    !paramsPageSize || paramsPageSize <= 0 ? defaultPageSize : paramsPageSize;
 
-  const authorList: AuthorListResponse = await fetch(
+  const response: AuthorListResponse = await fetch(
     "http://localhost:5000/graphql",
     {
       method: "POST",
       body: JSON.stringify({
         query,
         variables: {
-          offset,
+          offset: offset - 1,
           limit,
         },
       }),
@@ -65,7 +66,7 @@ const AuthorsPage = async ({ searchParams }: AuthorsPageProps) => {
     }
   ).then((res) => res.json());
 
-  if (!authorList?.data?.authorList) throw new Error("Something went wrong");
+  if (!response?.data?.authorList) throw new Error("Something went wrong");
 
   return (
     <div>
@@ -79,8 +80,8 @@ const AuthorsPage = async ({ searchParams }: AuthorsPageProps) => {
         New Author
       </Button>
 
-      <Grid container spacing={2} mt={4}>
-        {authorList?.data?.authorList?.nodes.map((author) => (
+      <Grid container spacing={2} mt={4} mb={15}>
+        {response?.data?.authorList?.nodes.map((author) => (
           <Grid item key={author.id} xs={12} sm={4} lg={3}>
             <AuthorCard
               id={author.id}
@@ -90,6 +91,8 @@ const AuthorsPage = async ({ searchParams }: AuthorsPageProps) => {
           </Grid>
         ))}
       </Grid>
+
+      <Pagination count={response.data.authorList.meta.total} />
     </div>
   );
 };
