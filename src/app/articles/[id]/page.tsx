@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import CardHeader from "@mui/material/CardHeader";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import DeleteArticleButton from "./DeleteArticleButton";
 
 type ArticleDetailsPageProps = {
   params: { id: string };
@@ -27,7 +28,7 @@ const ArticleDetailsPage = (props: ArticleDetailsPageProps) => {
         title={"Dr. Pym Hanks"}
         subheader={`Published ${new Date().toLocaleString()}`}
       />
-      <Typography>
+      <Typography mb={2}>
         Aggredior demoror utrum caries tempus terra a quisquam sollers corpus.
         Bellum supellex damnatio thalassinus vero templum adicio surgo delego
         arbitro. Corrupti sopor ceno abscido ulterius communis benevolentia
@@ -44,6 +45,8 @@ const ArticleDetailsPage = (props: ArticleDetailsPageProps) => {
         adficio artificiose terebro caecus uter cruentus. Bellum approbo vomito.
         Claustrum concido cedo placeat.
       </Typography>
+
+      <DeleteArticleButton articleId="123" />
     </Box>
   );
 };
