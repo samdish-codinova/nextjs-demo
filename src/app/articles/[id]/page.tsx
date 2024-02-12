@@ -1,8 +1,11 @@
+import EditIcon from "@mui/icons-material/Edit";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import CardHeader from "@mui/material/CardHeader";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Author } from "../types";
 import DeleteArticleButton from "./DeleteArticleButton";
@@ -71,7 +74,17 @@ const ArticleDetailsPage = async ({ params }: ArticleDetailsPageProps) => {
       />
       <Typography mb={2}>{article.content}</Typography>
 
-      <DeleteArticleButton articleId={article.id} />
+      <Box display="flex" gap={1}>
+        <DeleteArticleButton articleId={article.id} />
+        <Button
+          variant="contained"
+          startIcon={<EditIcon />}
+          component={Link}
+          href={`/articles/${article.id}/update`}
+        >
+          Edit
+        </Button>
+      </Box>
     </Box>
   );
 };

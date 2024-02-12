@@ -29,8 +29,6 @@ const DeleteArticleButton = ({ articleId }: { articleId: string }) => {
     setLoading(true);
 
     try {
-      console.log("Deleting article with id ", articleId);
-
       const deleteResponse: DeleteArticleResponse = await fetch(
         "http://localhost:5000/graphql",
         {
@@ -42,7 +40,7 @@ const DeleteArticleButton = ({ articleId }: { articleId: string }) => {
           headers: {
             "Content-Type": "application/json",
           },
-        },
+        }
       ).then((res) => res.json());
 
       const errors = deleteResponse?.errors;
@@ -73,7 +71,7 @@ const DeleteArticleButton = ({ articleId }: { articleId: string }) => {
       color="error"
       startIcon={<DeleteForeverIcon />}
     >
-      {loading ? "Deleting..." : "Delete Article"}
+      {loading ? "Deleting..." : "Delete"}
     </Button>
   );
 };
