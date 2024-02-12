@@ -70,7 +70,7 @@ const AuthorDetailsPage = async ({ params }: AuthorDetailsPageProps) => {
         {new Date(author.createdAt).toLocaleString()}
       </Typography>
 
-      <DeleteAuthorButton />
+    <DeleteAuthorButton authorId={author.id} />
     </Stack>
   );
 };
