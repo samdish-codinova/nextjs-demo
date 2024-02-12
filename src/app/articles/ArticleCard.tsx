@@ -5,7 +5,7 @@ import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
 import { Node } from "./types";
 
-const Article = (props: Node) => {
+const ArticleCard = (props: Node) => {
   return (
     <div>
       <Card>
@@ -23,4 +23,4 @@ const Article = (props: Node) => {
   );
 };
 
-export default Article;
+export default ArticleCard;

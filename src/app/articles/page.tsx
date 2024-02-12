@@ -1,6 +1,9 @@
+import AddIcon from "@mui/icons-material/Add";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Link from "next/link";
 import Pagination from "../components/Pagination";
-import Article from "./article";
-import ArticleListContainer from "./articleListContainer";
+import ArticleCard from "./ArticleCard";
 import { Response } from "./types";
 
 const query = `
@@ -58,11 +61,23 @@ const ArticlesPage = async ({ searchParams }: ArticlePageProps) => {
 
   return (
     <>
-      <ArticleListContainer>
+      <Button
+        LinkComponent={Link}
+        href="/articles/new"
+        variant="contained"
+        color="warning"
+        startIcon={<AddIcon />}
+      >
+        New Article
+      </Button>
+
+      <Grid container spacing={2} mt={4} mb={15}>
         {response.data.articleList.nodes.map((article) => (
-          <Article key={article.id} {...article} />
+          <Grid item key={article.id} xs={12} sm={6}>
+            <ArticleCard key={article.id} {...article} />
+          </Grid>
         ))}
-      </ArticleListContainer>
+      </Grid>
 
       <Pagination count={response.data.articleList.meta.total} />
     </>
