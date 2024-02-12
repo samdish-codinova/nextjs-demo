@@ -4,11 +4,12 @@ import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
 import { Node } from "./types";
+import Link from "next/link";
 
 const ArticleCard = (props: Node) => {
   return (
     <div>
-      <Card>
+      <Card component={Link} href={`/articles/${props.id}`}>
         <Typography variant="h5" sx={{ px: 2, pt: 2 }}>
           {props.title}
         </Typography>

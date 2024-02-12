@@ -3,50 +3,75 @@ import Box from "@mui/material/Box";
 import CardHeader from "@mui/material/CardHeader";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import { notFound } from "next/navigation";
+import { Author } from "../types";
 import DeleteArticleButton from "./DeleteArticleButton";
 
 type ArticleDetailsPageProps = {
   params: { id: string };
 };
 
-const ArticleDetailsPage = (props: ArticleDetailsPageProps) => {
+const query = `
+  query GetArticle($id: String!) {
+    getArticle(id: $id) {
+      id
+      title
+      content
+      createdAt
+      author {
+        avatar
+        createdAt
+        id
+        name
+      }
+    }
+  }
+`;
+
+type GetArticleResponse = {
+  data?: {
+    getArticle: {
+      id: string;
+      title: string;
+      content: string;
+      createdAt: Date;
+      author: Author;
+    } | null;
+  } | null;
+  errors?: [{ message: string; [x: string]: unknown }];
+};
+
+const ArticleDetailsPage = async ({ params }: ArticleDetailsPageProps) => {
+  const res: GetArticleResponse = await fetch("http://localhost:5000/graphql", {
+    method: "POST",
+    body: JSON.stringify({
+      query,
+      variables: { id: params.id },
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((res) => res.json());
+
+  const article = res.data?.getArticle;
+
+  if (!article) return notFound();
+
   return (
     <Box component={Paper} elevation={3} p={3}>
-      <Typography variant="h3" component="h1">
-        Appositus congregatio conforto minima comes usus aer.
+      <Typography variant="h4" component="h1">
+        {article.title}
       </Typography>
       <Box
         component={CardHeader}
         px={0}
-        avatar={
-          <Avatar
-            id={props.params.id}
-            src={"https://avatars.githubusercontent.com/u/92872703"}
-            aria-label="author"
-          />
-        }
-        title={"Dr. Pym Hanks"}
-        subheader={`Published ${new Date().toLocaleString()}`}
+        avatar={<Avatar src={article.author.avatar} aria-label="author" />}
+        title={article.author.name}
+        subheader={`Published ${new Date(article.createdAt).toLocaleString()}`}
       />
-      <Typography mb={2}>
-        Aggredior demoror utrum caries tempus terra a quisquam sollers corpus.
-        Bellum supellex damnatio thalassinus vero templum adicio surgo delego
-        arbitro. Corrupti sopor ceno abscido ulterius communis benevolentia
-        supra vulgaris triumphus. Valens ago aiunt adulescens casus defaeco vivo
-        aegrus exercitationem. Cupiditate nisi ultio cresco demens paens. Sopor
-        sperno suspendo approbo stillicidium amiculum. Supra adficio artificiose
-        terebro caecus uter cruentus. Bellum approbo vomito. Claustrum concido
-        cedo placeat. Aggredior demoror utrum caries tempus terra a quisquam
-        sollers corpus. Bellum supellex damnatio thalassinus vero templum adicio
-        surgo delego arbitro. Corrupti sopor ceno abscido ulterius communis
-        benevolentia supra vulgaris triumphus. Valens ago aiunt adulescens casus
-        defaeco vivo aegrus exercitationem. Cupiditate nisi ultio cresco demens
-        paens. Sopor sperno suspendo approbo stillicidium amiculum. Supra
-        adficio artificiose terebro caecus uter cruentus. Bellum approbo vomito.
-        Claustrum concido cedo placeat.
-      </Typography>
+      <Typography mb={2}>{article.content}</Typography>
 
-      <DeleteArticleButton articleId="123" />
+      <DeleteArticleButton articleId={article.id} />
     </Box>
   );
 };
