@@ -11,28 +11,36 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import useAllAuthors from "./useAllAuthors";
+
+const mutation = `
+  mutation CreateArticle($title: String!, $content: String!, $authorId: String!) {
+    createArticle(title: $title, content: $content, authorId: $authorId) {
+      id
+    }
+  }
+`;
+
+type CreateArticleResponse = {
+  data?: {
+    createArticle: { id: string };
+  } | null;
+  errors?: [{ message: string; [x: string]: unknown }];
+};
 
 const NewArticleForm = () => {
-  const authors = [
-    {
-      id: "0c341dcb-e351-479a-abab-84c12ed880e1",
-      name: "Sam",
-    },
-    {
-      id: "15cd5a5f-cc9e-495e-a34c-e8f335b8c3d2",
-      name: "Dr. Pim Hanks",
-    },
-    {
-      id: "1b3e42a6-a55b-4c81-a7ee-f869221aad01",
-      name: "Jan Corwin",
-    },
-  ];
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   const {
     register,
     formState: { errors },
+    reset,
     handleSubmit,
   } = useForm<ArticleInput>({
     resolver: zodResolver(ArticleInputSchema),
@@ -40,12 +48,36 @@ const NewArticleForm = () => {
 
   const submitHandler = async (articleData: ArticleInput) => {
     try {
-      console.log("Creating article", articleData);
+      setLoading(true);
+      const createArticleResponse: CreateArticleResponse = await fetch(
+        "http://localhost:5000/graphql",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            query: mutation,
+            variables: articleData,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((res) => res.json());
+
+      const articleId = createArticleResponse.data?.createArticle?.id;
+      if (!articleId)
+        return toast.error("Could not create article. Try again later.");
+
+      reset();
       toast.success("Article created successfully");
+      router.push(`/articles/${articleId}`);
     } catch (error) {
       toast.error("Could not create article. Try again later.");
+    } finally {
+      setLoading(false);
     }
   };
+
+  const { data: authors, loading: authorsLoading } = useAllAuthors();
 
   return (
     <>
@@ -59,11 +91,12 @@ const NewArticleForm = () => {
           select
           label="Author"
           defaultValue=""
+          disabled={authorsLoading}
           {...register("authorId")}
           error={!!errors.authorId?.message}
           helperText={errors.authorId?.message}
         >
-          {authors.map((option) => (
+          {(authors ?? []).map((option) => (
             <MenuItem key={option.id} value={option.id}>
               {option.name}
             </MenuItem>
@@ -93,7 +126,7 @@ const NewArticleForm = () => {
             color="warning"
             startIcon={<SaveIcon />}
           >
-            Save
+            {loading ? "Saving..." : "Save"}
           </Button>
         </Box>
       </Stack>
