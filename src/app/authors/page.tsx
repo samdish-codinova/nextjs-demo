@@ -63,6 +63,7 @@ const AuthorsPage = async ({ searchParams }: AuthorsPageProps) => {
       headers: {
         "Content-Type": "application/json",
       },
+      cache: "no-store",
     }
   ).then((res) => res.json());
 

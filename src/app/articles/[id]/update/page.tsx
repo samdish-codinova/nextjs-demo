@@ -43,6 +43,7 @@ const UpdateArticlePage = async ({ params }: UpdateArticlePageProps) => {
     headers: {
       "Content-Type": "application/json",
     },
+    cache: "no-store",
   }).then((res) => res.json());
 
   const article = res.data?.getArticle;

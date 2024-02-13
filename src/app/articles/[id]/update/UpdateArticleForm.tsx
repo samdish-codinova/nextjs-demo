@@ -82,6 +82,7 @@ const UpdateArticleForm = ({ article }: UpdateArticleFormProps) => {
       reset();
       toast.success("Article updated successfully");
       router.push(`/articles/${article.id}`);
+      router.refresh();
     } catch (error) {
       toast.error("Could not create article. Try again later.");
     } finally {

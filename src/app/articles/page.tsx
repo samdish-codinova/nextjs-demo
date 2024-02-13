@@ -55,6 +55,7 @@ const ArticlesPage = async ({ searchParams }: ArticlePageProps) => {
     headers: {
       "Content-Type": "application/json",
     },
+    cache: "no-store",
   }).then((res) => res.json());
 
   if (!response.data?.articleList) throw new Error("Something went wrong");
