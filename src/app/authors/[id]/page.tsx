@@ -1,10 +1,14 @@
+import EditIcon from "@mui/icons-material/Edit";
 import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Author } from "../../articles/types";
 import DeleteAuthorButton from "./DeleteAuthorButton";
-import { notFound } from "next/navigation";
 
 type AuthorDetailsPageProps = {
   params: {
@@ -23,7 +27,7 @@ const query = `
   }
 `;
 
-type AuthorDetailsResponse = {
+export type AuthorDetailsResponse = {
   data: {
     getAuthor: Author;
   };
@@ -41,7 +45,7 @@ const AuthorDetailsPage = async ({ params }: AuthorDetailsPageProps) => {
       headers: {
         "Content-Type": "application/json",
       },
-      cache: 'no-store'
+      cache: "no-store",
     }
   ).then((res) => res.json());
 
@@ -71,7 +75,17 @@ const AuthorDetailsPage = async ({ params }: AuthorDetailsPageProps) => {
         {new Date(author.createdAt).toLocaleString()}
       </Typography>
 
-    <DeleteAuthorButton authorId={author.id} />
+      <Box display="flex" gap={1}>
+        <DeleteAuthorButton authorId={author.id} />
+        <Button
+          variant="contained"
+          startIcon={<EditIcon />}
+          component={Link}
+          href={`/authors/${author.id}/update`}
+        >
+          Edit
+        </Button>
+      </Box>
     </Stack>
   );
 };

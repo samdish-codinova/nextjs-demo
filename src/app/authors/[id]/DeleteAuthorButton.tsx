@@ -66,7 +66,7 @@ const DeleteAuthorButton = ({ authorId }: { authorId: string }) => {
       color="error"
       startIcon={<DeleteForeverIcon />}
     >
-      Delete Author
+      Delete
     </Button>
   );
 };
