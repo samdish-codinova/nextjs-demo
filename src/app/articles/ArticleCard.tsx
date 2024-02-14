@@ -2,13 +2,14 @@ import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
+import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { Node } from "./types";
 import Link from "next/link";
+import { Node } from "./types";
 
 const ArticleCard = (props: Node) => {
   return (
-    <div>
+    <Paper elevation={3}>
       <Card component={Link} href={`/articles/${props.id}`}>
         <Typography variant="h5" sx={{ px: 2, pt: 2 }}>
           {props.title}
@@ -20,7 +21,7 @@ const ArticleCard = (props: Node) => {
         />
         <CardContent>{props.content}</CardContent>
       </Card>
-    </div>
+    </Paper>
   );
 };
 
