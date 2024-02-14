@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
-import UpdateAuthorForm from "./UpdateAuthorForm";
-import { AuthorDetailsResponse } from "../page";
 import { notFound } from "next/navigation";
+import { AuthorDetailsResponse } from "../page";
+import UpdateAuthorForm from "./UpdateAuthorForm";
 
 const query = `
   query GetAuthor($id: String!) {

@@ -3,8 +3,8 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Link from "next/link";
 import { Author, Meta } from "../articles/types";
-import AuthorCard from "./AuthorCard";
 import Pagination from "../components/Pagination";
+import AuthorCard from "./AuthorCard";
 
 const query = `
   query GetAuthorList($limit: Int, $offset: Int) {
